@@ -13,9 +13,9 @@
         <span class="text-foreground font-semibold">{{ product.productname }}</span>
     </nav>
 
-    {% if product.generic_name %}
-    <a href="{% url 'store:compare_generic' product.generic_name %}" class="inline-flex items-center gap-1 text-sm text-primary font-semibold hover:underline mt-2">
-        Compare {{ product.generic_name }} prices from other sellers →
+    {% if product.composition %}
+    <a href="{% url 'store:compare_composition' product.composition %}" class="inline-flex items-center gap-1 text-sm text-primary font-semibold hover:underline mt-2">
+        Compare {{ product.composition }} prices from other sellers →
     </a>
     {% endif %}
 
