@@ -1,8 +1,8 @@
 {% extends "store/base.html" %}
-{% block title %}Compare {{ generic_name }} — MedHelp{% endblock %}
+{% block title %}Compare {{ composition }} — MedHelp{% endblock %}
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 py-12">
-    <h1 class="text-2xl font-extrabold font-display mb-2">Comparing {{ generic_name }}</h1>
+    <h1 class="text-2xl font-extrabold font-display mb-2">Comparing {{ composition }}</h1>
     <p class="text-muted-foreground text-sm mb-8">Prices from all sellers offering this medicine.</p>
 
     <div class="space-y-3">
@@ -29,7 +29,7 @@
             <p class="text-lg font-bold text-primary">₹{{ product.price }}</p>
         </a>
         {% empty %}
-        <p class="text-muted-foreground">No other sellers found for this generic.</p>
+        <p class="text-muted-foreground">No other sellers found for this composition.</p>
         {% endfor %}
     </div>
 </div>
