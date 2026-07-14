@@ -5,7 +5,7 @@ from datetime import timedelta
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.mail import send_mail
-from django.conf import settings
+from django.conf import Settings
 from django.db.models import Sum, Count, Q, Avg
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -46,7 +46,7 @@ def _send_otp_email(customer, otp):
     send_mail(
         subject='Your MedHelp verification code',
         message=f'Your verification code is {otp}. It expires in 10 minutes.',
-        from_email=settings.DEFAULT_FROM_EMAIL,
+        from_email=Settings.DEFAULT_FROM_EMAIL,
         recipient_list=[customer.email],
         fail_silently=False,
     )
@@ -336,7 +336,7 @@ def compare_composition(request, composition):
 
     return render(request, 'store/compare_composition.html', {
         'composition': composition,
-        'products': products,
+        'products': Products,
     })
 
 def symptom_suggest(request):
