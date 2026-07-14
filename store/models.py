@@ -65,7 +65,6 @@ class Payments(models.Model):
 class Products(models.Model):
     productid = models.AutoField(primary_key=True)
     productname = models.CharField(max_length=255)
-    generic_name = models.CharField(max_length=255, blank=True, null=True)
     composition = models.CharField(max_length=255, blank=True, null=True)
     contraindications = models.TextField(blank=True, null=True)  # "Do not take if..."
     symptoms = models.ManyToManyField('Symptom', through='ProductSymptom', related_name='products')
