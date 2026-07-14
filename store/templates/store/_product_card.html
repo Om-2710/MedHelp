@@ -1,0 +1,65 @@
+{% load static %}
+<article class="group bg-card rounded-2xl overflow-hidden border border-border hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col">
+    <div class="relative overflow-hidden bg-gray-50 aspect-square">
+        <a href="{% url 'store:product_detail' product.productid %}" class="block w-full h-full">
+            {% if product.photo_path %}
+                <img src="{{ product.photo_path.url }}" alt="{{ product.productname }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            {% else %}
+                <div class="w-full h-full flex items-center justify-center bg-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="text-muted-foreground/40"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                </div>
+            {% endif %}
+        </a>
+
+        {% if product.discounted_prices and product.discounted_prices < product.price %}
+        <span class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow pointer-events-none">
+            SALE
+        </span>
+        {% endif %}
+
+        <form action="{% url 'store:add_to_wishlist' product.productid %}" method="post" class="absolute top-3 right-3">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button type="submit" class="w-8 h-8 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow hover:scale-110 transition-transform" aria-label="Add to wishlist">
+                {% if product.productid in wishlist_product_ids %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#ef4444" stroke="#ef4444" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>
+                {% else %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>
+                {% endif %}
+            </button>
+        </form>
+    </div>
+
+    <div class="p-4 flex flex-col flex-1 gap-2">
+        {% if product.catergoryid %}
+        <p class="text-[10px] font-bold text-primary uppercase tracking-widest">{{ product.catergoryid.catergorytype }}</p>
+        {% endif %}
+        <a href="{% url 'store:product_detail' product.productid %}" class="text-sm font-semibold leading-snug line-clamp-2 hover:text-primary transition-colors">
+            {{ product.productname }}
+        </a>
+
+        <div class="flex items-baseline gap-2 mt-auto pt-1">
+            {% if product.discounted_prices and product.discounted_prices < product.price %}
+                <span class="text-base font-extrabold">₹{{ product.discounted_prices }}</span>
+                <span class="text-sm text-muted-foreground line-through">₹{{ product.price }}</span>
+            {% else %}
+                <span class="text-base font-extrabold">₹{{ product.price }}</span>
+            {% endif %}
+        </div>
+
+        {% if product.variants.exists %}
+        <a href="{% url 'store:product_detail' product.productid %}" class="w-full block text-center bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-semibold hover:bg-[#0047b8] active:scale-95 transition-all mt-1">
+            View Options
+        </a>
+        {% else %}
+        <form action="{% url 'store:add_to_cart' product.productid %}" method="post" class="mt-1">
+            {% csrf_token %}
+            <input type="hidden" name="quantity" value="1">
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button type="submit" class="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-semibold hover:bg-[#0047b8] active:scale-95 transition-all">
+                Add to Cart
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</article>

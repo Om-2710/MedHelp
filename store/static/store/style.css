@@ -1,0 +1,22 @@
+/* Small custom additions -- most styling comes from Tailwind CDN classes in the templates. */
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* Fallback for line-clamp if Tailwind CDN version doesn't include it */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 100;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.animate__animated.animate__fadeIn {
+    animation-duration: 5s;
+}
+
+:root {
+    --animate-duration: 2s;
+    --animation-iteration-count: infinite;
+    --animate-delay: 2s;
+}

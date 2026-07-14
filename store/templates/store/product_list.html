@@ -1,0 +1,40 @@
+{% extends "store/base.html" %}
+{% block title %}{% if query %}"{{ query }}" — Search{% else %}All Products{% endif %} — ShopStack{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <nav class="flex items-center gap-2 text-sm text-muted-foreground mb-8">
+        <a href="{% url 'store:home' %}" class="hover:text-primary transition-colors">Home</a>
+        <span>/</span>
+        <span class="text-foreground font-semibold">{% if query %}Search{% else %}All Products{% endif %}</span>
+    </nav>
+
+    <div class="mb-8">
+        {% if query %}
+            <p class="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Search Results</p>
+            <h1 class="text-2xl md:text-3xl font-extrabold font-display">"{{ query }}"</h1>
+            <p class="text-muted-foreground text-sm mt-1">{{ products|length }} result{{ products|length|pluralize }}</p>
+        {% else %}
+            <p class="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">Shop</p>
+            <h1 class="text-2xl md:text-3xl font-extrabold font-display">All Products</h1>
+        {% endif %}
+    </div>
+
+    {% if products %}
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        {% for product in products %}
+            {% include "store/_product_card.html" %}
+        {% endfor %}
+    </div>
+    {% else %}
+        {% if query %}
+        <div class="text-center py-28">
+            <p class="text-lg text-muted-foreground font-medium mb-2">No products matched "{{ query }}".</p>
+            <a href="{% url 'store:product_list' %}" class="text-primary font-semibold hover:underline">Clear search</a>
+        </div>
+        {% else %}
+        <p class="text-center py-28 text-muted-foreground text-lg">No products available yet.</p>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

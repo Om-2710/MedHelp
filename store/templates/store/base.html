@@ -1,0 +1,200 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MedHelp{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+    rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        background: '#f4f6fb',
+                        foreground: '#0d1b3e',
+                        card: '#ffffff',
+                        primary: '#0052d4',
+                        'primary-foreground': '#ffffff',
+                        secondary: '#e8eef8',
+                        muted: '#dde3f0',
+                        'muted-foreground': '#6278a0',
+                        border: 'rgba(13, 27, 62, 0.09)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        '2xl': '1rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="{% static 'store/style.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-screen bg-background text-foreground font-sans">
+
+    {# ---------- messages (e.g. "Added to cart") ---------- #}
+    {% if messages %}
+    <div class="fixed top-20 right-4 z-[100] space-y-2" id="toast-container">
+        {% for message in messages %}
+        <div class="bg-foreground text-white text-sm font-semibold px-4 py-3 rounded-xl shadow-xl">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        setTimeout(() => {
+            const c = document.getElementById('toast-container');
+            if (c) c.style.display = 'none';
+        }, 2500);
+    </script>
+    {% endif %}
+
+    {# ---------- navbar ---------- #}
+    <header class="sticky top-0 z-50 bg-white/96 backdrop-blur-md border-b border-border shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center h-16 gap-4">
+                <a href="{% url 'store:home' %}" class="flex items-center gap-2 shrink-0 group">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#0052d4] to-[#6fb1fc] flex items-center justify-center shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                    </div>
+                    <span class="text-lg font-extrabold tracking-tight font-display">MedHelp</span>
+                </a>
+
+                <nav class="hidden md:flex items-center gap-1 ml-2 relative">
+                    <button id="cat-toggle" class="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold hover:text-primary hover:bg-secondary rounded-lg transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+                        Categories
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <div id="cat-dropdown" class="hidden absolute top-full left-0 mt-1 w-72 bg-white rounded-2xl shadow-2xl border border-border overflow-hidden z-50">
+                        <div class="p-2">
+                            {% for cat in nav_categories %}
+                            <a href="{% url 'store:category_detail' cat.catergoryid %}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-secondary transition-colors">
+                                <div class="min-w-0">
+                                    <p class="text-sm font-semibold">{{ cat.catergorytype }}</p>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-auto text-muted-foreground shrink-0"><path d="m9 18 6-6-6-6"/></svg>
+                            </a>
+                            {% empty %}
+                            <p class="px-3 py-2 text-sm text-muted-foreground">No categories yet.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <a href="{% url 'store:symptom_suggest' %}" class="px-3 py-2 text-sm font-semibold hover:text-primary hover:bg-secondary rounded-lg transition-colors">
+    Find by Symptom
+</a>
+                </nav>
+
+                <form action="{% url 'store:product_list' %}" method="get" class="flex-1 max-w-md mx-4 hidden md:block">
+                    <div class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        <input type="search" name="q" value="{{ request.GET.q }}" placeholder="Search products..." class="w-full pl-9 pr-4 py-2.5 bg-secondary rounded-xl text-sm border border-transparent focus:border-primary focus:outline-none transition-colors">
+                    </div>
+                </form>
+
+                <div class="ml-auto flex items-center gap-1">
+                    <a href="{% url 'store:wishlist' %}" class="relative p-2.5 rounded-xl hover:bg-secondary transition-colors" aria-label="Wishlist">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z"/></svg>
+                        {% if wishlist_count %}
+                        <span class="absolute -top-0.5 -right-0.5 bg-primary text-primary-foreground text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">{{ wishlist_count }}</span>
+                        {% endif %}
+                    </a>
+                    <a href="{% url 'store:cart' %}" class="relative p-2.5 rounded-xl hover:bg-secondary transition-colors" aria-label="Cart">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                        {% if cart_count %}
+                        <span class="absolute -top-0.5 -right-0.5 bg-primary text-primary-foreground text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">{{ cart_count }}</span>
+                        {% endif %}
+                    </a>
+
+                    {% if logged_in_customer %}
+                    <div class="flex items-center gap-2 pl-2 ml-1 border-l border-border">
+                        <span class="hidden sm:inline text-sm font-semibold text-foreground">Hi, {{ logged_in_customer.customername|default:logged_in_customer.email }}</span>
+                        <form action="{% url 'store:logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="text-sm font-semibold text-muted-foreground hover:text-red-500 transition-colors px-2">Logout</button>
+                        </form>
+                    </div>
+                    {% else %}
+                    <div class="flex items-center gap-1 pl-2 ml-1 border-l border-border">
+                        <a href="{% url 'store:login' %}" class="text-sm font-semibold text-muted-foreground hover:text-primary transition-colors px-2 py-2">Login</a>
+                        <a href="{% url 'store:signup' %}" class="text-sm font-semibold bg-primary text-primary-foreground px-3 py-2 rounded-xl hover:bg-[#0047b8] transition-colors">Sign Up</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {# ---------- footer ---------- #}
+    <footer class="bg-[#0d1b3e] text-white/70 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+                <div class="col-span-2 md:col-span-1">
+                    <p class="text-white font-extrabold text-lg font-display mb-3">MedHelp</p>
+                    <p class="text-sm text-white/50 leading-relaxed">Curated products across electronics, fashion, home, and more.</p>
+                </div>
+                <div>
+                    <p class="text-white font-bold text-sm uppercase tracking-widest mb-4">Shop</p>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="{% url 'store:product_list' %}" class="hover:text-white transition-colors">All Products</a></li>
+                        {% for cat in nav_categories %}
+                        <li><a href="{% url 'store:category_detail' cat.catergoryid %}" class="hover:text-white transition-colors">{{ cat.catergorytype }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    <p class="text-white font-bold text-sm uppercase tracking-widest mb-4">Help</p>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Shipping Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Returns &amp; Exchanges</a></li>
+                        <li><a href="{% url 'store:cart' %}" class="hover:text-white transition-colors">Your Cart</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="text-white font-bold text-sm uppercase tracking-widest mb-4">Newsletter</p>
+                    <p class="text-sm text-white/50 mb-4 leading-relaxed">Get the latest deals delivered to your inbox.</p>
+                    <div class="flex gap-2">
+                        <input type="email" placeholder="your@email.com" class="flex-1 bg-white/10 border border-white/15 rounded-xl px-3 py-2.5 text-sm text-white placeholder:text-white/35 focus:outline-none min-w-0">
+                        <button class="bg-primary text-white px-4 py-2.5 rounded-xl text-sm font-bold shrink-0">Join</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/10 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/35">
+                <p>&copy; 2026 ShopStack. All rights reserved.</p>
+                <p>Powered by <span class="text-blue-300">Django</span> + <span class="text-blue-300">MySQL</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const toggle = document.getElementById('cat-toggle');
+        const dropdown = document.getElementById('cat-dropdown');
+        if (toggle && dropdown) {
+            toggle.addEventListener('click', () => dropdown.classList.toggle('hidden'));
+            document.addEventListener('click', (e) => {
+                if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends "store/base.html" %}
+{% block title %}Checkout — ShopStack{% endblock %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-2xl font-extrabold font-display mb-6">Checkout</h1>
+
+    <div class="bg-card border border-border rounded-2xl p-6 mb-6">
+        {% for li in line_items %}
+        <div class="flex justify-between items-center py-3 border-b border-border last:border-0">
+            <div>
+                <p class="font-semibold">{{ li.cart_item.product.productname }}</p>
+                <p class="text-sm text-muted-foreground">
+                    Qty: {{ li.cart_item.quantity }} × ₹{{ li.unit_price }}
+                </p>
+            </div>
+            <p class="font-bold">₹{{ li.subtotal }}</p>
+        </div>
+        {% endfor %}
+        <div class="flex justify-between pt-4 mt-2 font-bold text-lg">
+            <p>Total</p>
+            <p>₹{{ total }}</p>
+        </div>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <label class="text-sm font-semibold block mb-1.5">Delivery address</label>
+        <textarea name="address" required rows="3" class="w-full px-4 py-2.5 border border-border rounded-xl mb-4 focus:outline-none focus:border-primary">{{ customer.address|default:'' }}</textarea>
+
+        <div class="bg-secondary rounded-xl p-4 mb-6 text-sm font-medium">
+            💵 Payment method: <strong>Cash on Delivery</strong>
+        </div>
+
+        <button type="submit" class="w-full bg-primary text-primary-foreground py-3.5 rounded-xl font-semibold hover:bg-[#0047b8] active:scale-95 transition-all">
+            Place Order (COD)
+        </button>
+    </form>
+</div>
+{% endblock %}

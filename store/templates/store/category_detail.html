@@ -1,0 +1,39 @@
+{% extends "store/base.html" %}
+{% block title %}{{ category.catergorytype }} — ShopStack{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <nav class="flex items-center gap-2 text-sm text-muted-foreground mb-8">
+        <a href="{% url 'store:home' %}" class="hover:text-primary transition-colors">Home</a>
+        <span>/</span>
+        <span class="text-foreground font-semibold">{{ category.catergorytype }}</span>
+    </nav>
+
+    <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
+        <div>
+            <h1 class="text-2xl md:text-3xl font-extrabold font-display">{{ category.catergorytype }}</h1>
+            <p class="text-muted-foreground text-sm mt-1">{{ category.product_count }} products</p>
+        </div>
+        <form method="get" class="flex items-center gap-2">
+            <select name="sort" onchange="this.form.submit()" class="text-sm border border-border rounded-xl px-4 py-2.5 bg-card focus:outline-none focus:border-primary cursor-pointer">
+                <option value="default" {% if sort == 'default' %}selected{% endif %}>Sort: Default</option>
+                <option value="price-asc" {% if sort == 'price-asc' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price-desc" {% if sort == 'price-desc' %}selected{% endif %}>Price: High to Low</option>
+            </select>
+        </form>
+    </div>
+
+    {% if products %}
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        {% for product in products %}
+            {% include "store/_product_card.html" %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-28 text-muted-foreground">
+        <p class="text-lg font-semibold">No products in this category yet.</p>
+        <a href="{% url 'store:home' %}" class="mt-4 inline-block text-primary font-medium hover:underline">Back to home</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

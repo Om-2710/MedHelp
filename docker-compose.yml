@@ -1,0 +1,39 @@
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_DATABASE=amazondb
+      - MYSQL_ROOT_PASSWORD=Priyanka@1012
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./amazondb_backup.sql:/docker-entrypoint-initdb.d/1_amazondb_backup.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pPriyanka@1012"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --save 60 1 --loglevel warning
+
+volumes:
+  mysql_data:
+  redis_data:

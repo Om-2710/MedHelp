@@ -1,0 +1,32 @@
+{% extends "store/base.html" %}
+{% block title %}Verify Your Email — ShopStack{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto px-4 py-16">
+    <h1 class="text-2xl font-extrabold font-display mb-2">Check your email</h1>
+    <p class="text-muted-foreground text-sm mb-8">
+        We sent a 6-digit verification code to <span class="font-semibold text-foreground">{{ email }}</span>.
+        It expires in 10 minutes.
+    </p>
+
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label class="text-sm font-semibold block mb-1.5">Verification code</label>
+            <input type="text" name="otp" inputmode="numeric" maxlength="6" required autofocus
+                   class="w-full px-4 py-3 border border-border rounded-xl text-center text-2xl tracking-[0.5em] font-bold focus:outline-none focus:border-primary">
+        </div>
+
+        <button type="submit" class="w-full bg-primary text-primary-foreground py-3 rounded-xl font-semibold hover:bg-[#0047b8] active:scale-95 transition-all mt-2">
+            Verify
+        </button>
+    </form>
+
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        <button type="submit" name="resend" value="1" class="w-full text-sm font-semibold text-primary hover:underline">
+            Resend code
+        </button>
+    </form>
+</div>
+{% endblock %}

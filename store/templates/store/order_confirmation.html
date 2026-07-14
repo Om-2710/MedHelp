@@ -1,0 +1,15 @@
+{% extends "store/base.html" %}
+{% block title %}Order Confirmed — ShopStack{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto px-4 py-20 text-center">
+    <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-green-100 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h1 class="text-2xl font-extrabold font-display mb-2">Order placed!</h1>
+    <p class="text-muted-foreground mb-1">Order #{{ order.orderid }}</p>
+    <p class="text-muted-foreground mb-8">Payment method: Cash on Delivery</p>
+    <a href="{% url 'store:home' %}" class="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-xl font-semibold hover:bg-[#0047b8] transition-all">
+        Continue shopping
+    </a>
+</div>
+{% endblock %}
