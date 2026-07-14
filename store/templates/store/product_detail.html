@@ -1,5 +1,5 @@
 {% extends "store/base.html" %}
-{% block title %}{{ product.productname }} — Apna Bazaar{% endblock %}
+{% block title %}{{ product.productname }} — MedHelp{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 pb-20">
@@ -15,7 +15,7 @@
 
     {% if product.composition %}
     <a href="{% url 'store:compare_composition' product.composition %}" class="inline-flex items-center gap-1 text-sm text-primary font-semibold hover:underline mt-2">
-        Compare {{ product.composition }} prices from other sellers →
+        Compare prices for this composition from other sellers →
     </a>
     {% endif %}
 
