@@ -326,16 +326,16 @@ def product_detail(request, pk):
 
 from django.db.models import Avg, Count, Q
 
-def compare_generic(request, generic_name):
+def compare_composition(request, composition):
     products = (
-        Products.objects.filter(generic_name__iexact=generic_name)
+        Products.objects.filter(composition__iexact=composition)
         .select_related('sellerid')
         .annotate(avg_rating=Avg('reviews__rating'), review_count=Count('reviews'))
         .order_by('-avg_rating', 'price')
     )
 
-    return render(request, 'store/compare_generic.html', {
-        'generic_name': generic_name,
+    return render(request, 'store/compare_composition.html', {
+        'composition': composition,
         'products': products,
     })
 
