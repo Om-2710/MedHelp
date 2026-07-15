@@ -336,7 +336,7 @@ def compare_composition(request, composition):
 
     return render(request, 'store/compare_composition.html', {
         'composition': composition,
-        'products': Products,
+        'products': products,
     })
 
 def symptom_suggest(request):
